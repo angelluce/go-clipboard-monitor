@@ -1,0 +1,10 @@
+.*
+!.gitignore
+!.github
+bin/*
+dist/*
+*.test
+*.out
+zz_generated.*
+*~
+*.sh
