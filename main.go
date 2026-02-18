@@ -28,7 +28,7 @@ func main() {
 
 			if *p == "" || *r == "" {
 				fmt.Println("\n❌ Error: Faltan parámetros.")
-				fmt.Println("Uso: .\\bda_clip.exe add -p \"palabra\" -r \"reemplazo\"")
+				fmt.Println("Uso: .\\clipboard_monitor.exe add -p \"palabra\" -r \"reemplazo\"")
 				return
 			}
 			agregarPalabra(*p, *r)
@@ -55,16 +55,16 @@ func main() {
 func mostrarAyuda() {
 	fmt.Println("\n")
 	fmt.Println(strings.Repeat("-", 50))
-	fmt.Println("     🛡️  CLIPBOARD MONITOR - GUÍA DE USO")
+	fmt.Println("     🛡️  CLIPBOARD MONITOR - GUÍA")
 	fmt.Println(strings.Repeat("-", 50))
 	fmt.Println("\n1. Iniciar el monitor (vigila el portapapeles):")
-	fmt.Println("   .\\bda_clip.exe")
+	fmt.Println("   .\\clipboard_monitor.exe")
 	fmt.Println("\n2. Agregar una nueva palabra:")
-	fmt.Println("   .\\bda_clip.exe add -p \"mi_secreto\" -r \"[CENSURADO]\"")
+	fmt.Println("   .\\clipboard_monitor.exe add -p \"mi_secreto\" -r \"[CENSURADO]\"")
 	fmt.Println("\n3. Ver todas las reglas guardadas:")
-	fmt.Println("   .\\bda_clip.exe list")
+	fmt.Println("   .\\clipboard_monitor.exe list")
 	fmt.Println("\n4. Ver esta ayuda:")
-	fmt.Println("   .\\bda_clip.exe help")
+	fmt.Println("   .\\clipboard_monitor.exe help")
 	fmt.Println(strings.Repeat("-", 50))
 }
 
