@@ -1,10 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -18,82 +19,86 @@ type Config struct {
 const configPath = "replacements.json"
 
 func main() {
-	if len(os.Args) > 1 {
-		switch os.Args[1] {
-		case "add":
-			addCmd := flag.NewFlagSet("add", flag.ExitOnError)
-			p := addCmd.String("p", "", "Palabra sensible")
-			r := addCmd.String("r", "", "Reemplazo")
-			addCmd.Parse(os.Args[2:])
+	fmt.Println("\n     ✨ Hola, bienvenido a CLIPBOARD MONITOR")
+	fmt.Println(strings.Repeat("-", 50))
+	fmt.Println("🕵️ Escaneando portapapeles...")
+	fmt.Println("🛟 Usa el comando \"help\" si necesitas ayuda.")
+	fmt.Println(strings.Repeat("-", 50))
 
-			if *p == "" || *r == "" {
-				fmt.Println("\n❌ Error: Faltan parámetros.")
-				fmt.Println("Uso: .\\clipboard_monitor.exe add -p \"palabra\" -r \"reemplazo\"")
-				return
+	go runMonitor()
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Print("> ")
+		if !scanner.Scan() {
+			break
+		}
+
+		input := strings.TrimSpace(scanner.Text())
+		if input == "" {
+			continue
+		}
+
+		// Usamos Regex para separar por espacios pero respetar lo que está entre comillas
+		re := regexp.MustCompile(`"([^"]+)"|([^\s]+)`)
+		matches := re.FindAllStringSubmatch(input, -1)
+
+		var args []string
+		for _, m := range matches {
+			if m[1] != "" {
+				args = append(args, m[1]) // Contenido entre comillas
+			} else {
+				args = append(args, m[2]) // Palabra simple
 			}
-			agregarPalabra(*p, *r)
-			return
+		}
 
+		switch args[0] {
+		case "add":
+			if len(args) < 3 {
+				fmt.Println("❌ Uso: add \"frase buscar\" \"frase reemplazo\"")
+			} else {
+				agregarPalabra(args[1], args[2])
+			}
 		case "list":
 			listarPalabras()
-			return
-
-		case "help", "-h", "--help":
+		case "help":
 			mostrarAyuda()
+		case "exit", "quit":
+			fmt.Println("Saliendo...")
 			return
-
 		default:
-			fmt.Printf("\n❓ Comando desconocido: %s\n", os.Args[1])
-			mostrarAyuda()
-			return
+			fmt.Printf("❓ Comando desconocido: %s\n", args[0])
 		}
 	}
-
-	runMonitor()
 }
 
 func mostrarAyuda() {
-	fmt.Println("\n")
-	fmt.Println(strings.Repeat("-", 50))
-	fmt.Println("     🛡️  CLIPBOARD MONITOR - GUÍA")
-	fmt.Println(strings.Repeat("-", 50))
-	fmt.Println("\n1. Iniciar el monitor (vigila el portapapeles):")
-	fmt.Println("   .\\clipboard_monitor.exe")
-	fmt.Println("\n2. Agregar una nueva palabra:")
-	fmt.Println("   .\\clipboard_monitor.exe add -p \"mi_secreto\" -r \"[CENSURADO]\"")
-	fmt.Println("\n3. Ver todas las reglas guardadas:")
-	fmt.Println("   .\\clipboard_monitor.exe list")
-	fmt.Println("\n4. Ver esta ayuda:")
-	fmt.Println("   .\\clipboard_monitor.exe help")
-	fmt.Println(strings.Repeat("-", 50))
+	fmt.Println("\n📖 COMANDOS:")
+	fmt.Println("  add \"p\" \"r\"   -> Agrega una regla")
+	fmt.Println("  list          -> Muestra todas las reglas")
+	fmt.Println("  exit          -> Cierra el programa")
 }
 
 func agregarPalabra(p, r string) {
 	config := cargarConfig()
 	config.Words[p] = r
 	saveConfig(config)
-	fmt.Printf("\n✅ REGLA REGISTRADA: [%s] -> [%s]\n", p, r)
+	fmt.Printf("✅ Regla añadida: [%s] ➔ [%s]\n", p, r)
 }
 
 func listarPalabras() {
 	config := cargarConfig()
 	if len(config.Words) == 0 {
-		fmt.Println("\n📭 No hay reglas registradas. Usa el comando 'add'.")
+		fmt.Println("📭 No hay reglas.")
 		return
 	}
 	fmt.Println("\n📋 REGLAS ACTUALES:")
-	fmt.Println(strings.Repeat("-", 50))
 	for k, v := range config.Words {
-		fmt.Printf("%-25s -> %-20s\n", k, v)
+		fmt.Printf("  %-20s ➔  %s\n", k, v)
 	}
 }
 
 func runMonitor() {
-	fmt.Println("\n     ✨  Hola, bienvenido a CLIPBOARD MONITOR")
-	fmt.Println(strings.Repeat("-", 50))
-	fmt.Println("🕵️ Escaneando portapapeles... (Ctrl+C para salir)")
-	fmt.Println("Puedes agregar palabras en otra terminal con 'add'")
-
 	lastContent, _ := clipboard.ReadAll()
 
 	for {
@@ -111,7 +116,9 @@ func runMonitor() {
 			}
 
 			if found {
-				fmt.Printf("⚠️ [%s] Contenido sensible censurado.\n", time.Now().Format("15:04:05"))
+				// \r regresa al inicio de linea, \033[K borra la linea actual
+				fmt.Print("\r\033[K")
+				fmt.Printf("⚠️ Contenido sensible - %s\n> ", time.Now().Format("15:04:05"))
 				clipboard.WriteAll(modified)
 				lastContent = modified
 			} else {
