@@ -1,8 +1,10 @@
 # 🛡️ Clipboard Monitor - Portapapeles seguro
+
 Clipboard Monitor es una herramienta diseñada para proteger información sensible 
 (IPs, contraseñas, tokens) al interactuar con IAs o chats externos. 
 El programa vigila tu portapapeles y reemplaza automáticamente las palabras que 
 tú definas antes de que las pegues en cualquier lugar.
+
 
 ## 🚀 Compilación rápida
 
@@ -18,49 +20,49 @@ set GOARCH=amd64
 go build -o clipboard_monitor main.go
 ```
 
+
 ## 🛠️ Cómo usarlo
 
-### 1. El vigilante (Monitor)
+### 1. El vigilante (Modo interactivo)
 
-Deja la terminal abierta. Mientras el programa diga [VIGILANTE ACTIVO], cualquier 
-texto que copies será procesado. Si copias algo que coincide con tus reglas, el 
-programa lo limpiará instantáneamente.
+Al ejecutar el programa, entrarás en una consola protegida. El monitor se 
+activa automáticamente en segundo plano. No necesitas abrir otras terminales; 
+puedes escribir comandos directamente mientras el programa sigue vigilando tu 
+portapapeles.
 
 ### 2. Agregar nuevas palabras
 
-Tienes dos formas de añadir reglas:
+Ahora puedes agregar palabras simples o frases completas usando comillas. 
+Escribe el comando directamente en la consola del programa:
 
-- Desde la terminal: Abre una nueva terminal en la carpeta del programa y escribe:
+- **Palabras simples:** add IP_LOCAL 127.0.0.1
+- **Frases con espacios:** add "Mi empresa segura" "trabajo"
 
-```bash
-# Ejemplo
-./clipboard_monitor add -p "10.0.0.45" -r "IP_PROD"
-```
+Nota: El uso de comillas " es obligatorio si tu búsqueda o tu reemplazo contienen espacios.
 
-- Editando el JSON: Abre replacements.json con cualquier editor de texto, añade la palabra 
-y el reemplazo, y guarda. El monitor cargará el cambio sin necesidad de reiniciar.
+### 3. Ver y gestionar reglas
 
-### 3. Ver tus reglas actuales
+Desde la misma consola, puedes interactuar con el diccionario de protección:
 
-Si quieres saber qué palabras estás protegiendo:
+- Para ver lo que estás protegiendo: Escribe list.
+- Para editar manualmente: Abre el archivo `replacements.json`. Los cambios se cargan en tiempo real sin reiniciar.
 
-```bash
-./clipboard_monitor list
-```
 
 ## 📋 Comandos disponibles
 
-| Comando                          | Descripción                             |
-|----------------------------------|-----------------------------------------|
-| *(ninguno)*                      | Inicia el monitor del portapapeles      |
-| add -p "busqueda" -r "reemplazo" | Añade una nueva regla de limpieza       |
-| list                             | Muestra la tabla de palabras protegidas |
-| help                             | Muestra la guía de ayuda rápida         |
+| Comando | Formato                  | Descripción                               |
+|---------|--------------------------|-------------------------------------------|
+| add     | add "buscar" "reemplazo" | Registra una nueva regla (soporta frases) |
+| list    | list                     | Muestra la tabla de reglas activas        |
+| help    | help                     | Muestra la guía rápida de comandos        |
+| exit    | exit                     | Cierra el programa y el monitor           |
+
 
 ## Notas de seguridad
 
 El programa no envía datos a internet. Todo el proceso ocurre localmente en tu memoria RAM. 
 Si cierras la ventana de la terminal, el programa dejará de proteger el portapapeles.
+
 
 ## Autor
 
