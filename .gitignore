@@ -3,8 +3,9 @@
 !.github
 bin/*
 dist/*
+scripts/*
 *.test
 *.out
 zz_generated.*
 *~
-*.sh
+*.log
