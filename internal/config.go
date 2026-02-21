@@ -19,7 +19,10 @@ func LoadConfig() Config {
 	}
 
 	var c Config
-	json.Unmarshal(data, &c)
+	errJson := json.Unmarshal(data, &c)
+	if errJson != nil {
+		return Config{}
+	}
 
 	if c.Words == nil {
 		c.Words = make(map[string]string)
@@ -66,5 +69,8 @@ func (m *Metrics) PrintStats() {
 
 func SaveConfig(c Config) {
 	data, _ := json.MarshalIndent(c, "", "  ")
-	os.WriteFile(configPath, data, 0644)
+	err := os.WriteFile(configPath, data, 0644)
+	if err != nil {
+		return
+	}
 }
