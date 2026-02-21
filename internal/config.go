@@ -36,32 +36,32 @@ func AddRule(k, v string) {
 
 func ListRules() {
 	config := LoadConfig()
-	fmt.Println("╭──────────────────────────────────────────────────────────╮")
-	fmt.Println("  📋 Reglas activas:")
+	fmt.Println(BoxTop)
+	fmt.Printf("  %s📋 Reglas activas:%s\n", ColorPrimary, ColorReset)
 	fmt.Println("")
 	for k, v := range config.Words {
-		fmt.Printf("  %-24s > %s\n", k, v)
+		fmt.Printf("  %s%-24s > %s%s\n", ColorGreen, k, v, ColorReset)
 	}
-	fmt.Println("╰──────────────────────────────────────────────────────────╯")
+	fmt.Println(BoxBottom)
 }
 
 func (m *Metrics) PrintStats() {
-	fmt.Println("╭──────────────────────────────────────────────────────────╮")
-	fmt.Println("  📊 Estadísticas de protección")
-	fmt.Printf("\n  Total de reemplazos: %-15d", m.TotalHits)
+	fmt.Println(BoxTop)
+	fmt.Printf("  %s📊 Estadísticas de protección%s\n", ColorPrimary, ColorReset)
+	fmt.Printf("\n  %sTotal de reemplazos: %-15d%s", ColorGreen, m.TotalHits, ColorReset)
 	fmt.Println("")
 
 	if len(m.RuleHits) == 0 {
-		fmt.Println("  No hay reglas activadas aún")
-		fmt.Println("╰──────────────────────────────────────────────────────────╯")
+		fmt.Printf("  %sNo hay reglas activadas aún%s\n", ColorYellow, ColorReset)
+		fmt.Println(BoxBottom)
 		return
 	}
 
 	fmt.Println("  Detalle por regla:")
 	for k, v := range m.RuleHits {
-		fmt.Printf("  • %-20s: %d veces\n", k, v)
+		fmt.Printf("  %s• %-20s: %d veces%s\n", ColorGreen, k, v, ColorReset)
 	}
-	fmt.Println("╰──────────────────────────────────────────────────────────╯")
+	fmt.Println(BoxBottom)
 }
 
 func SaveConfig(c Config) {

@@ -20,14 +20,14 @@ func (c *ConsoleNotifier) Notify(result Result) {
 
 	fmt.Print("\033[2K\r")
 
-	fmt.Println("╭──────────────────────────────────────────────────────────╮")
+	fmt.Println(BoxTop)
 	fmt.Printf("  🔒 Contenido sensible detectado - %s\n", timestamp)
 	fmt.Printf("\n  Reglas activadas: %d\n", len(result.TriggeredRules))
 	for _, rule := range result.TriggeredRules {
 		fmt.Printf("   • %s\n", rule)
 	}
 	fmt.Printf("  Contenido protegido y reemplazado\n")
-	fmt.Println("╰──────────────────────────────────────────────────────────╯")
+	fmt.Println(BoxBottom)
 
 	fmt.Print("> ")
 
