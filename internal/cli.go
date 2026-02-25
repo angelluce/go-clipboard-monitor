@@ -35,7 +35,6 @@ func (cli *CLI) printHelp() {
 	fmt.Printf("  %slist                      Muestra reglas actuales%s\n", ColorGreen, ColorReset)
 	fmt.Printf("  %sstats                     Muestra estadísticas%s\n", ColorGreen, ColorReset)
 	fmt.Printf("  %shelp                      Muestra esta ayuda%s\n", ColorGreen, ColorReset)
-	fmt.Printf("  %sexit                      Cierra el programa%s\n", ColorGreen, ColorReset)
 	fmt.Println(BoxBottom)
 }
 
@@ -101,12 +100,6 @@ func (cli *CLI) processCommand(input string) {
 
 	case "help":
 		cli.printHelp()
-
-	case "exit", "quit":
-		fmt.Println(BoxTop)
-		fmt.Printf("  %s👋 ¡Hasta luego! Saliendo...%s\n", ColorPrimary, ColorReset)
-		fmt.Println(BoxBottom)
-		os.Exit(0)
 
 	default:
 		fmt.Println(BoxTop)
