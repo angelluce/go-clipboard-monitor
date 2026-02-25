@@ -22,7 +22,7 @@ func NewCLI(metrics *Metrics, engine *Engine) *CLI {
 
 func (cli *CLI) PrintWelcome() {
 	fmt.Println(BoxTop)
-	fmt.Printf("  %s✨  Hola, bienvenido a CLIPBOARD MONITOR%s\n", ColorPrimary, ColorReset)
+	fmt.Printf("  %s✨  Hola, bienvenido a CLIPBOARD MONITOR %s %s\n", ColorPrimary, Version, ColorReset)
 	fmt.Printf("\n  %s📋 Monitoreando el portapapeles...%s\n", ColorYellow, ColorReset)
 	fmt.Printf("  %s💡 Escribe 'help' para ver todos los comandos%s\n", ColorBlue, ColorReset)
 	fmt.Println(BoxBottom)
