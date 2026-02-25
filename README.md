@@ -56,7 +56,6 @@ Desde la misma consola, puedes interactuar con el diccionario de protección:
 | list    | list                     | Muestra la tabla de reglas activas        |
 | stats   | stats                    | Muestra las estadísticas de la sesión     |
 | help    | help                     | Muestra la guía rápida de comandos        |
-| exit    | exit                     | Cierra el programa y el monitor           |
 
 
 ## Notas de seguridad
