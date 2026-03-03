@@ -11,12 +11,14 @@ import (
 type CLI struct {
 	Metrics *Metrics
 	Engine  *Engine
+	Scanner *Scanner
 }
 
 func NewCLI(metrics *Metrics, engine *Engine) *CLI {
 	return &CLI{
 		Metrics: metrics,
 		Engine:  engine,
+		Scanner: NewScanner(engine),
 	}
 }
 
@@ -34,6 +36,7 @@ func (cli *CLI) printHelp() {
 	fmt.Printf("\n  %sadd \"texto\" \"reemplazo\"   Añade regla de protección%s\n", ColorGreen, ColorReset)
 	fmt.Printf("  %slist                      Muestra reglas actuales%s\n", ColorGreen, ColorReset)
 	fmt.Printf("  %sstats                     Muestra estadísticas%s\n", ColorGreen, ColorReset)
+	fmt.Printf("  %sscan ruta/archivo.txt     Escanea y sanitiza archivo%s\n", ColorGreen, ColorReset)
 	fmt.Printf("  %shelp                      Muestra esta ayuda%s\n", ColorGreen, ColorReset)
 	fmt.Println(BoxBottom)
 }
@@ -98,6 +101,15 @@ func (cli *CLI) processCommand(input string) {
 	case "stats":
 		cli.Metrics.PrintStats()
 
+	case "scan":
+		if len(args) < 2 {
+			fmt.Println(BoxTop)
+			fmt.Printf("  %s❌  Uso: scan ruta/archivo.txt%s\n", ColorYellow, ColorReset)
+			fmt.Println(BoxBottom)
+			return
+		}
+		cli.handleScan(args[1])
+
 	case "help":
 		cli.printHelp()
 
@@ -106,4 +118,31 @@ func (cli *CLI) processCommand(input string) {
 		fmt.Printf("  %s❓  Comando desconocido. Usa 'help' para ver opciones.%s\n", ColorYellow, ColorReset)
 		fmt.Println(BoxBottom)
 	}
+}
+
+func (cli *CLI) handleScan(filePath string) {
+	fmt.Println(BoxTop)
+	fmt.Printf("  %s🔍 Escaneando archivo: %s%s\n", ColorBlue, filePath, ColorReset)
+	fmt.Println(BoxBottom)
+
+	result, err := cli.Scanner.ScanFile(filePath, false)
+	if err != nil {
+		fmt.Println(BoxTop)
+		fmt.Printf("  %s❌ Error: %v%s\n", ColorYellow, err, ColorReset)
+		fmt.Println(BoxBottom)
+		return
+	}
+
+	fmt.Println(BoxTop)
+	if len(result.TriggeredRules) > 0 {
+		fmt.Printf("  %s✅  Archivo sanitizado correctamente%s\n", ColorGreen, ColorReset)
+		fmt.Printf("\n  %s📊 Resumen:%s\n", ColorPrimary, ColorReset)
+		fmt.Printf("  %s   • Reglas aplicadas: %d%s\n", ColorBlue, len(result.TriggeredRules), ColorReset)
+		fmt.Printf("  %s   • Reemplazos realizados: %d%s\n", ColorBlue, result.ReplacedCount, ColorReset)
+		fmt.Printf("  %s   • Archivo generado: %s%s\n", ColorGreen, result.OutputPath, ColorReset)
+	} else {
+		fmt.Printf("  %s✅ Archivo procesado%s\n", ColorGreen, ColorReset)
+		fmt.Printf("  %s   • No se encontraron términos sensibles%s\n", ColorBlue, ColorReset)
+	}
+	fmt.Println(BoxBottom)
 }
