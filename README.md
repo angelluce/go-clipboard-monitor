@@ -47,6 +47,18 @@ Desde la misma consola, puedes interactuar con el diccionario de protección:
 - Para ver lo que estás protegiendo: Escribe list.
 - Para editar manualmente: Abre el archivo `replacements.json`. Los cambios se cargan en tiempo real sin reiniciar.
 
+### 4. Escanear archivos
+
+Puedes analizar y sanitizar archivos aplicando las mismas reglas de protección:
+
+```bash
+scan ruta/de/mi/archivo.txt
+scan logs/aplicacion.log
+```
+
+El comando generará un nuevo archivo con el sufijo `_sanitized` (ej: `archivo_sanitized.txt`) 
+manteniendo el original intacto. Actualmente soporta archivos `.txt` y `.log`.
+
 
 ## 📋 Comandos disponibles
 
@@ -55,6 +67,7 @@ Desde la misma consola, puedes interactuar con el diccionario de protección:
 | add     | add "buscar" "reemplazo" | Registra una nueva regla (soporta frases) |
 | list    | list                     | Muestra la tabla de reglas activas        |
 | stats   | stats                    | Muestra las estadísticas de la sesión     |
+| scan    | scan ruta/archivo.txt    | Escanea y sanitiza archivos (.txt, .log)  |
 | help    | help                     | Muestra la guía rápida de comandos        |
 
 
